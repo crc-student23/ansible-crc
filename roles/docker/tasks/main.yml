@@ -1,0 +1,43 @@
+---
+# tasks file for docker
+- name: 'Install required packages'
+  yum:
+    name: [yum-utils, device-mapper-persistent-data, lvm2, lsof, wget]
+    state: present
+
+- name: 'Add docker repository'
+  get_url:
+    url: 'https://download.docker.com/linux/centos/docker-ce.repo'
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: 0644
+
+- name: 'Install pip'
+  command: yum install -y epel-release python-pip jq git
+  register: dockertest
+  changed_when: "dockertest.rc != 0"
+
+- name: 'Install docker packages'
+  yum:
+    name: [docker-ce, docker-ce-cli, containerd.io]
+    state: present
+
+- name: 'Install pip2'
+  yum:
+    name: [python2-pip]
+
+- name: Install docker'
+  pip:
+    name: docker
+    state: present
+
+- name: 'start docker service'
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: 'Run test image'
+  docker_container:
+    name: dockertest
+    image: hello-world
+    state: present

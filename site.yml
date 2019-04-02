@@ -1,3 +1,4 @@
 ---
 - import_playbook: motd.yml
 - import_playbook: webserver.yml
+- import_playbook: docker.yml
