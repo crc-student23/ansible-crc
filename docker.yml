@@ -1,0 +1,5 @@
+---
+- hosts: docker_hosts
+  tasks:
+  - import_role:
+      name: docker
